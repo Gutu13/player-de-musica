@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+          body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #333;
+    color: #ddd;
+    font-family: 'Montserrat', sans-serif;
+}
+         .botao{
+             width: 25px;
+             height: 25px;
+             font-size: 10px;
+             margin: 1px;
+             cursor: pointer;
+             background-color: rgb(31,31,30);
+             
+             color: #fff;
+         }
+         .botao2{
+             width: 25px;
+             height: 25px;
+             font-size: 10px;
+             margin: 1px;
+             cursor: pointer;
+             background-color: rgb(46, 6, 97);
+             
+             color: #fff;
+         }
+        
+.botao4{
+             width: 25px;
+             height: 25px;
+             font-size: 10px;
+             margin: 1px;
+             cursor: pointer;
+             background-color: rgb(80, 11, 158);
+             
+             color: #fff;
+         }
+.botao:hover{
+             background-color: black;
+         }
+img {
+    width: 200px;
+    height: 200px;
+}
+
+.descricao {
+    width: 200px;
+}
+
+h2 {
+    margin-bottom: 50px;
+}
+
+.duracao {
+    width: 300px;
+    margin-top: 25px;
+}
+
+.barra {
+    width: 300px;
+    height: 6px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+progress {
+    height: 6px;
+    width: 0%;
+    background-color: #333;
+}
+
+.ponto {
+    width: 20px;
+    height: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+    margin-left: -10px;
+}
+
+.tempo {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+}
+
+.player {
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 15px;
+}
+    </style>
+    <title>music player</title> 
+</head>
+<body>
+    <img src="imagen/Rock.jpg">
+    <div class="descricao">
+        <h2>Nome da música</h2>
+        <i>alguma música</i>
+    </div>
+    <div class="duracao">
+        <div class="barra">
+            <progress value="0" max="1"></progress>
+            <div class="ponto"></div>
+        </div>
+        <div class="tempo">
+            <p class="inicio">0:00</p>
+        </div>
+    </div>
+    <audio src="musicas/"></audio>
+    <div class="fundo">
+        <div class="player">
+         
+            <table>
+                <tr>
+                    <td><button class="botao" onclick="insert('*')">*</button></td>
+                    <td><button class="botao" onclick="insert('(III')">(III</button></td>
+                    <td><button class="botao" onclick="insert('>I')">>I</button></td>
+                    <td><button class="botao" onclick="insert('=>')">=></button></td>
+                    <td><button class="botao" onclick="insert('II')">II</button></td>
+                    <td><button class="botao" onclick="insert('I<')">I<</button></td>
+                    <td><button class="botao" onclick="insert('@')">@</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+            let musicas = [
+    {titulo:'um violão', artista:'qualquer', source:'alguma música', imagem:''},
+    
+];
+
+let musica = document.querySelector('audio');
+let musicaIndex = 0;
+let nomeMusica = document.querySelector('.descricao h2');
+let nomeArtista = document.querySelector('.descricao i');
+let imagem = document.querySelector('.img');
+let tempoDecorrido = document.querySelector('.tempo .inicio');
+let duracaoMusica = document.querySelector('.tempo .fim');
+
+nomeMusica.textContent = musicas[musicaIndex].titulo;
+nomeArtista.textContent = musicas[musicaIndex].artista;
+imagem.setAttribute('src', musicas[musicaIndex].img);
+duracaoMusica.textContent = segundosParaMinutos(Math.floor(musica.duration));
+
+
+document.querySelector('=>').addEventListener('click', tocarMusica);
+
+document.querySelector('II').addEventListener('click', pausarMusica);
+
+musica.addEventListener('*', atualizarBarra);
+
+document.querySelector('<').addEventListener('click', () => {
+    musicaIndex--; 
+    if (musicaIndex < 0){
+        musicaIndex = 2;
+    }
+    renderizarMusica(musicaIndex);
+});
+
+document.querySelector('>').addEventListener('click', () => {
+    musicaIndex++;
+    if (musicaIndex > 2){
+        musicaIndex = 0;
+    }
+    renderizarMusica(musicaIndex);
+});
+
+function renderizarMusica(musicaIndex){
+    musica.setAttribute('src', musicas[musicaIndex].source);
+
+    musica.addEventListener('loadeddata', () => {
+        nomeMusica.textContent = musicas[musicaIndex].titulo;
+        nomeArtista.textContent = musicas[musicaIndex].artista;
+        imagem.src = musicas[musicaIndex].img;
+    
+        duracaoMusica.textContent = segundosParaMinutos(Math.floor(musica.duration));
+    });
+
+    document.body.append(musica);
+}
+
+function tocarMusica(){
+    musica.play();
+    document.querySelector('=>').style.display = 'none';
+    document.querySelector('II').style.display = 'block';
+}
+
+function pausarMusica(){
+    musica.pause();
+    document.querySelector('=>').style.display = 'block';
+    document.querySelector('II').style.display = 'none';
+}
+function segundosParaMinutos(segundos){
+    let campoMinutos = Math.floor(segundos / 60);
+    let campoSegundos = segundos % 60;
+
+    if (campoSegundos < 10){
+        campoSegundos = '0'+ campoSegundos;
+    }
+    return `${campoMinutos}:${campoSegundos}`;
+}
+
+function atualizarBarra(){
+    let barra = document.querySelector('progress');
+    barra.style.width = Math.floor((musica.currentTime / musica.duration)*100) + '%';
+    tempoDecorrido.textContent = segundosParaMinutos(Math.floor(musica.currentTime));
+}
+        
+    </script>
+</body>
+</html>
